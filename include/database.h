@@ -67,20 +67,31 @@ public:
 
     bool insert_hourly(double avg, double min, double max, int count) {
         time_t now = time(nullptr);
-        std::string sql = "INSERT INTO hourly_stats (timestamp, avg_temperature, min_temperature, max_temperature, sample_count) VALUES (" +
+    	std::string sql = "INSERT INTO hourly_stats (timestamp, avg_temperature, min_temperature, max_temperature, sample_count) VALUES (" +
                           std::to_string(now) + ", " + std::to_string(avg) + ", " + std::to_string(min) + ", " + 
                           std::to_string(max) + ", " + std::to_string(count) + ");";
-        return sqlite3_exec(db, sql.c_str(), nullptr, nullptr, &errMsg) == SQLITE_OK;
+    
+    	int rc = sqlite3_exec(db, sql.c_str(), nullptr, nullptr, &errMsg);
+    	if (rc != SQLITE_OK) {
+            std::cerr << "❌ Ошибка вставки в hourly_stats: " << errMsg << std::endl;
+            return false;
+        }
+    	return true;
     }
 
-    bool insert_daily(double avg, double min, double max, int count) {
-        time_t now = time(nullptr);
-        std::string sql = "INSERT INTO daily_stats (timestamp, avg_temperature, min_temperature, max_temperature, sample_count) VALUES (" +
-                          std::to_string(now) + ", " + std::to_string(avg) + ", " + std::to_string(min) + ", " + 
-                          std::to_string(max) + ", " + std::to_string(count) + ");";
-        return sqlite3_exec(db, sql.c_str(), nullptr, nullptr, &errMsg) == SQLITE_OK;
+bool insert_daily(double avg, double min, double max, int count) {
+    time_t now = time(nullptr);
+    std::string sql = "INSERT INTO daily_stats (timestamp, avg_temperature, min_temperature, max_temperature, sample_count) VALUES (" +
+                      std::to_string(now) + ", " + std::to_string(avg) + ", " + std::to_string(min) + ", " + 
+                      std::to_string(max) + ", " + std::to_string(count) + ");";
+    
+    int rc = sqlite3_exec(db, sql.c_str(), nullptr, nullptr, &errMsg);
+    if (rc != SQLITE_OK) {
+        std::cerr << "❌ Ошибка вставки в daily_stats: " << errMsg << std::endl;
+        return false;
     }
-
+    return true;
+}
     struct Reading {
         time_t timestamp;
         double temperature;

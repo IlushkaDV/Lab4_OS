@@ -242,18 +242,14 @@ int main(int argc, char* argv[]) {
                 daily_buffer.add(temp);
 
                 time_t now = time(nullptr);
-                
-                // УСКОРЕННАЯ СТАТИСТИКА ДЛЯ ДЕМОНСТРАЦИИ:
-                // "Час" = 15 секунд
-                time_t current_hour = now - (now % 15);
+                time_t current_hour = now - (now % 3600);
                 if (current_hour > last_hour && hourly_buffer.size() > 0) {
                     calculate_and_save_hourly();
                     hourly_buffer = CircularBuffer(3600);
                     last_hour = current_hour;
                 }
 
-                // "День" = 60 секунд
-                time_t current_day = now - (now % 60);
+                time_t current_day = now - (now % (24*3600));
                 if (current_day > last_day && daily_buffer.size() > 0) {
                     calculate_and_save_daily();
                     daily_buffer = CircularBuffer(24 * 3600);
