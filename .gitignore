@@ -12,6 +12,20 @@ build/
 *.out
 
 # Временные файлы
+build/
+*.out
+*.exe
+*.o
+*.so
+*.a
+
+# Лог-файлы (они генерируются при работе)
+temperature_raw.log
+temperature_hourly.log
+temperature_daily.log
+temperature_daily_*.log
+
+# Временные файлы редакторов
 *~
 *.swp
 *.swo
